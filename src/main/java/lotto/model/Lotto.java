@@ -1,9 +1,10 @@
 package lotto.model;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import static lotto.global.exception.ErrorCode.INVALID_NUMBERS_SIZE;
-import static lotto.global.exception.ErrorCode.INVALID_NUMBER_RANGE;
+import static lotto.global.exception.ErrorCode.*;
 
 public class Lotto {
 
@@ -21,6 +22,14 @@ public class Lotto {
     private void validate(List<Integer> numbers) {
         validateNumberCount(numbers);
         validateNumberRange(numbers);
+        validateUniqueNumbers(numbers);
+    }
+
+    private void validateUniqueNumbers(List<Integer> numbers) {
+        Set<Integer> uniqueNumbers = new HashSet<>(numbers);
+        if (uniqueNumbers.size() != NUMBERS_SIZE) {
+            throw new IllegalArgumentException(NOT_UNIQUE_NUMBERS.getMessage());
+        }
     }
 
     private void validateNumberRange(List<Integer> numbers) {
