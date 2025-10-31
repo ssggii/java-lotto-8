@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static camp.nextstep.edu.missionutils.test.Assertions.assertRandomUniqueNumbersInRangeTest;
 import static lotto.global.exception.ErrorCode.INVALID_NUMBERS_SIZE;
+import static lotto.global.exception.ErrorCode.INVALID_NUMBER_RANGE;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class LottoTest {
@@ -23,5 +25,19 @@ class LottoTest {
                 .isInstanceOf(IllegalArgumentException.class).hasMessage(INVALID_NUMBERS_SIZE.getMessage());
         assertThatThrownBy(() -> Lotto.from(numbers2))
                 .isInstanceOf(IllegalArgumentException.class).hasMessage(INVALID_NUMBERS_SIZE.getMessage());
+    }
+
+    @Test
+    @DisplayName("로또 번호의 숫자가 1~45 사이의 범위가 아니면 예외가 발생한다.")
+    void lottoNumbersRangeTest() {
+        // given
+        List<Integer> numbers = List.of(1, 2, 3, 4, 5, 46);
+
+        // when, then
+        assertRandomUniqueNumbersInRangeTest(
+                () -> assertThatThrownBy(() -> Lotto.from(numbers))
+                        .isInstanceOf(IllegalArgumentException.class).hasMessage(INVALID_NUMBER_RANGE.getMessage()),
+                numbers
+        );
     }
 }
