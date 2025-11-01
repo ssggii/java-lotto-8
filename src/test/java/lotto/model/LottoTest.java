@@ -1,14 +1,19 @@
-package lotto;
+package lotto.model;
 
-import lotto.model.Lotto;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 
 import static camp.nextstep.edu.missionutils.test.Assertions.assertRandomUniqueNumbersInRangeTest;
 import static lotto.global.exception.ErrorCode.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LottoTest {
 
@@ -57,6 +62,31 @@ class LottoTest {
                 () -> assertThatThrownBy(() -> Lotto.from(numbers))
                         .isInstanceOf(IllegalArgumentException.class).hasMessage(NOT_UNIQUE_NUMBERS.getMessage()),
                 numbers
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideLottoNumbersWithWinningNumbers")
+    @DisplayName("중복되지 않는 번호 목록에서 로또 번호와 일치하는 숫자의 개수를 계산한다.")
+    void getHittingNumberCountTest(Set<Integer> targetNumbers, int expectedHittingCount) {
+        // given
+        Lotto lotto = Lotto.from(List.of(1, 2, 3, 4, 5, 6));
+
+        // when
+        int hittingCount = lotto.getHittingNumberCount(targetNumbers);
+
+        // then
+        assertEquals(expectedHittingCount, hittingCount);
+    }
+
+    private static Stream<Arguments> provideLottoNumbersWithWinningNumbers() {
+        return Stream.of(
+                Arguments.of(Set.of(1, 2, 3, 4, 5, 6), 6),
+                Arguments.of(Set.of(1, 2, 3, 4, 5, 7), 5),
+                Arguments.of(Set.of(1, 2, 3, 4, 8, 7), 4),
+                Arguments.of(Set.of(1, 2, 3, 9, 8, 7), 3),
+                Arguments.of(Set.of(1, 2, 10, 9, 8, 7), 2),
+                Arguments.of(Set.of(1, 11, 10, 9, 8, 7), 1)
         );
     }
 }

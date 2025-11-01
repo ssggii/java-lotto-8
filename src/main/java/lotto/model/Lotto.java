@@ -3,6 +3,7 @@ package lotto.model;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static lotto.global.exception.ErrorCode.*;
 
@@ -47,6 +48,14 @@ public class Lotto {
 
     public static Lotto from(List<Integer> numbers) {
         return new Lotto(numbers);
+    }
+
+    public int getHittingNumberCount(Set<Integer> targetNumbers) {
+        Set<Integer> lottoNumbers = new HashSet<>(numbers);
+        Set<Integer> hittingNumbers = lottoNumbers.stream()
+                .filter(targetNumbers::contains)
+                .collect(Collectors.toSet());
+        return hittingNumbers.size();
     }
 
 }
