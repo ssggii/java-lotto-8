@@ -8,9 +8,9 @@ import static lotto.global.exception.ErrorCode.*;
 
 public class Lotto {
 
-    private static final int NUMBERS_SIZE = 6;
-    private static final int NUMBER_RANGE_MIN = 1;
-    private static final int NUMBER_RANGE_MAX = 45;
+    public static final int NUMBERS_SIZE = 6;
+    public static final int NUMBER_RANGE_MIN = 1;
+    public static final int NUMBER_RANGE_MAX = 45;
 
     private final List<Integer> numbers;
 
