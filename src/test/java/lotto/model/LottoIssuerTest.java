@@ -7,7 +7,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 
+import static lotto.global.exception.ErrorCode.NEGATIVE_PURCHASE_AMOUNT;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LottoIssuerTest {
@@ -43,4 +45,18 @@ class LottoIssuerTest {
         assertThat(purchasedLottos).hasSize(3); // 구매한 로또는 3장이어야함
     }
 
+    @Test
+    @DisplayName("구입 금액이 음수이면 예외가 발생한다.")
+    void negativePurchaseAmountTest() {
+        // given
+        int purchaseAmount = -3000;
+        int lottoPrice = 1000;
+        LottoIssuer lottoIssuer = new LottoIssuer();
+
+        // when, then
+        assertThatThrownBy(() -> lottoIssuer.issue(purchaseAmount, lottoPrice))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining(NEGATIVE_PURCHASE_AMOUNT.getMessage());
+
+    }
 }

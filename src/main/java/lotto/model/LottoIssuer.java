@@ -5,6 +5,7 @@ import camp.nextstep.edu.missionutils.Randoms;
 import java.util.ArrayList;
 import java.util.List;
 
+import static lotto.global.exception.ErrorCode.NEGATIVE_PURCHASE_AMOUNT;
 import static lotto.model.Lotto.*;
 
 public class LottoIssuer {
@@ -12,9 +13,20 @@ public class LottoIssuer {
     public static final int DEFAULT_LOTTO_PRICE = 1000;
 
     public List<Lotto> issue(int purchaseAmount, int lottoPrice) {
-        lottoPrice = getLottoPriceOrDefault(lottoPrice);
-        int lottoCount = purchaseAmount / lottoPrice;
+        int lottoCount = calculateLottoCount(purchaseAmount, lottoPrice);
         return createLottos(lottoCount);
+    }
+
+    private int calculateLottoCount(int purchaseAmount, int lottoPrice) {
+        validatePurchaseAmount(purchaseAmount);
+        lottoPrice = getLottoPriceOrDefault(lottoPrice);
+        return purchaseAmount / lottoPrice;
+    }
+
+    private void validatePurchaseAmount(int purchaseAmount) {
+        if (purchaseAmount < 0) {
+            throw new IllegalArgumentException(NEGATIVE_PURCHASE_AMOUNT.getMessage());
+        }
     }
 
     private int getLottoPriceOrDefault(int lottoPrice) {
