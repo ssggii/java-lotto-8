@@ -1,5 +1,7 @@
 package lotto.model;
 
+import lotto.dto.AllWinningNumbers;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -52,12 +54,20 @@ public class Lotto {
         return new Lotto(numbers);
     }
 
-    public int getHittingNumberCount(Set<Integer> targetNumbers) {
+    public Integer findHittingNumberCount(Set<Integer> targetNumbers) {
         Set<Integer> lottoNumbers = new HashSet<>(numbers);
         Set<Integer> hittingNumbers = lottoNumbers.stream()
                 .filter(targetNumbers::contains)
                 .collect(Collectors.toSet());
         return hittingNumbers.size();
+    }
+
+    public boolean isHitBonusNumber(AllWinningNumbers allWinningNumbers) {
+        int bonusNumber = allWinningNumbers.bonusNumber();
+        Set<Integer> notHitNumbers = numbers.stream()
+                .filter(number -> !allWinningNumbers.winningNumbers().contains(number))
+                .collect(Collectors.toSet());
+        return notHitNumbers.contains(bonusNumber);
     }
 
     public List<Integer> getNumbers() {

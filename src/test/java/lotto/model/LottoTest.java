@@ -68,12 +68,12 @@ class LottoTest {
     @ParameterizedTest
     @MethodSource("provideLottoNumbersWithWinningNumbers")
     @DisplayName("중복되지 않는 번호 목록에서 로또 번호와 일치하는 숫자의 개수를 계산한다.")
-    void getHittingNumberCountTest(Set<Integer> targetNumbers, int expectedHittingCount) {
+    void findHittingNumberCountTest(Set<Integer> targetNumbers, int expectedHittingCount) {
         // given
         Lotto lotto = Lotto.from(List.of(1, 2, 3, 4, 5, 6));
 
         // when
-        int hittingCount = lotto.getHittingNumberCount(targetNumbers);
+        int hittingCount = lotto.findHittingNumberCount(targetNumbers);
 
         // then
         assertEquals(expectedHittingCount, hittingCount);
