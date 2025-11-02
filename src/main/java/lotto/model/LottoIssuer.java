@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static lotto.global.exception.ErrorCode.NEGATIVE_PURCHASE_AMOUNT;
-import static lotto.global.exception.ErrorCode.NOT_DIVIDED_UP_PURCHASE_AMOUNT;
+import static lotto.global.exception.ErrorCode.PURCHASE_AMOUNT_NOT_DIVIDED_UP;
 import static lotto.model.Lotto.*;
 
 public class LottoIssuer {
 
-    public static final int DEFAULT_LOTTO_PRICE = 1000;
+    private static final int DEFAULT_LOTTO_PRICE = 1000;
 
     public List<Lotto> issue(int purchaseAmount, int lottoPrice) {
         int lottoCount = calculateLottoCount(purchaseAmount, lottoPrice);
@@ -19,23 +19,23 @@ public class LottoIssuer {
     }
 
     private int calculateLottoCount(int purchaseAmount, int lottoPrice) {
-        validatePurchaseAmount(purchaseAmount);
+        validate(purchaseAmount);
         lottoPrice = getLottoPriceOrDefault(lottoPrice);
         return purchaseAmount / lottoPrice;
     }
 
-    private void validatePurchaseAmount(int purchaseAmount) {
-        validateNegativePurchaseAmount(purchaseAmount);
-        validatePurchaseAmountDividedUp(purchaseAmount);
+    private void validate(int purchaseAmount) {
+        validateNegativeNumber(purchaseAmount);
+        validateDividedUp(purchaseAmount);
     }
 
-    private void validatePurchaseAmountDividedUp(int purchaseAmount) {
-        if (purchaseAmount % DEFAULT_LOTTO_PRICE != 0) {
-            throw new IllegalArgumentException(NOT_DIVIDED_UP_PURCHASE_AMOUNT.getMessage());
+    private void validateDividedUp(int purchaseAmount) {
+        if (purchaseAmount % LOTTO_PRICE_UNIT != 0) {
+            throw new IllegalArgumentException(PURCHASE_AMOUNT_NOT_DIVIDED_UP.getMessage());
         }
     }
 
-    private void validateNegativePurchaseAmount(int purchaseAmount) {
+    private void validateNegativeNumber(int purchaseAmount) {
         if (purchaseAmount < 0) {
             throw new IllegalArgumentException(NEGATIVE_PURCHASE_AMOUNT.getMessage());
         }

@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.List;
 
 import static lotto.global.exception.ErrorCode.NEGATIVE_PURCHASE_AMOUNT;
+import static lotto.global.exception.ErrorCode.PURCHASE_AMOUNT_NOT_DIVIDED_UP;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -71,6 +72,6 @@ class LottoIssuerTest {
         // when, then
         assertThatThrownBy(() -> lottoIssuer.issue(purchaseAmount, lottoPrice))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("구입 금액을 1000원 단위로 입력해주세요");
+                .hasMessageContaining(PURCHASE_AMOUNT_NOT_DIVIDED_UP.getMessage());
     }
 }

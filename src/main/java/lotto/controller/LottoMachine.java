@@ -1,5 +1,7 @@
 package lotto.controller;
 
+import lotto.global.exception.UserInputException;
+import lotto.global.util.UserInputParser;
 import lotto.model.LottoDrawer;
 import lotto.model.LottoIssuer;
 import lotto.view.InputView;
@@ -20,8 +22,18 @@ public class LottoMachine {
     }
 
     public void on() {
-        String purchaseAmountInput = inputView.getPurchaseAmountInput();
+        int purchaseAmount = getValidPurchaseAmount();
+    }
 
+    public int getValidPurchaseAmount() {
+        while (true) {
+            try {
+                String purchaseAmountInput = inputView.getPurchaseAmountInput();
+                return UserInputParser.parsePurchaseAmount(purchaseAmountInput);
+            } catch (UserInputException e) {
+                outputView.printErrorMessage(e.getErrorCode().getMessage());
+            }
+        }
     }
 
 }

@@ -13,7 +13,7 @@ public class UserInputParser {
             validate(purchaseAmount);
             return purchaseAmount;
         } catch (NumberFormatException e) {
-            throw new UserInputException(NOT_NUMBER_FORMAT);
+            throw new UserInputException(PURCHASE_AMOUNT_NOT_NUMBER_FORMAT);
         }
     }
 
@@ -24,13 +24,13 @@ public class UserInputParser {
 
     private static void validateNegativeNumber(int purchaseAmount) {
         if (purchaseAmount < 0) {
-            throw new UserInputException(NEGATIVE_INTEGER);
+            throw new UserInputException(NEGATIVE_PURCHASE_AMOUNT);
         }
     }
 
     private static void validateNotDividedUp(int purchaseAmount) {
         if (purchaseAmount % LOTTO_PRICE_UNIT != 0) {
-            throw new UserInputException(NOT_DIVIDED_UP);
+            throw new UserInputException(PURCHASE_AMOUNT_NOT_DIVIDED_UP);
         }
     }
 

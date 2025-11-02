@@ -17,7 +17,7 @@ class UserInputParserTest {
         // when, then
         assertThatThrownBy(() -> UserInputParser.parsePurchaseAmount(input))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining(NOT_NUMBER_FORMAT.getMessage());
+                .hasMessageContaining(PURCHASE_AMOUNT_NOT_NUMBER_FORMAT.getMessage());
 
     }
 
@@ -30,7 +30,7 @@ class UserInputParserTest {
         // when, then
         assertThatThrownBy(() -> UserInputParser.parsePurchaseAmount(input))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining(NEGATIVE_INTEGER.getMessage());
+                .hasMessageContaining(NEGATIVE_PURCHASE_AMOUNT.getMessage());
     }
 
     @Test
@@ -42,6 +42,6 @@ class UserInputParserTest {
         // when, then
         assertThatThrownBy(() -> UserInputParser.parsePurchaseAmount(purchaseAmountInput))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining(NOT_DIVIDED_UP.getMessage());
+                .hasMessageContaining(PURCHASE_AMOUNT_NOT_DIVIDED_UP.getMessage());
     }
 }

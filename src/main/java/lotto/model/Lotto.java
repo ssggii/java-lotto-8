@@ -1,5 +1,6 @@
 package lotto.model;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -12,6 +13,7 @@ public class Lotto {
     public static final int NUMBERS_SIZE = 6;
     public static final int NUMBER_RANGE_MIN = 1;
     public static final int NUMBER_RANGE_MAX = 45;
+    public static final int LOTTO_PRICE_UNIT = 1000;
 
     private final List<Integer> numbers;
 
@@ -56,6 +58,10 @@ public class Lotto {
                 .filter(targetNumbers::contains)
                 .collect(Collectors.toSet());
         return hittingNumbers.size();
+    }
+
+    public List<Integer> getNumbers() {
+        return Collections.unmodifiableList(numbers);
     }
 
 }
