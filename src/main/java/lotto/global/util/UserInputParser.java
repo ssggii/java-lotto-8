@@ -1,25 +1,37 @@
 package lotto.global.util;
 
-import static lotto.global.exception.ErrorCode.NOT_INTEGER_FORMAT;
-import static lotto.global.exception.ErrorCode.NOT_POSITIVE_INTEGER;
+import lotto.global.exception.UserInputException;
+
+import static lotto.global.exception.ErrorCode.*;
+import static lotto.model.Lotto.LOTTO_PRICE_UNIT;
 
 public class UserInputParser {
 
-    public static int parsePositiveInteger(String input) {
+    public static int parsePurchaseAmount(String purchaseAmountInput) {
         try {
-            int parsedInt = Integer.parseInt(input);
-            validatePositiveInteger(parsedInt);
-            return parsedInt;
+            int purchaseAmount = Integer.parseInt(purchaseAmountInput);
+            validate(purchaseAmount);
+            return purchaseAmount;
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException(NOT_INTEGER_FORMAT.getMessage(input));
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(NOT_POSITIVE_INTEGER.getMessage(input));
+            throw new UserInputException(NOT_NUMBER_FORMAT);
         }
     }
 
-    private static void validatePositiveInteger(int parsedInt) {
-        if (parsedInt < 0) {
-            throw new IllegalArgumentException();
+    private static void validate(int purchaseAmount) {
+        validateNegativeNumber(purchaseAmount);
+        validateNotDividedUp(purchaseAmount);
+    }
+
+    private static void validateNegativeNumber(int purchaseAmount) {
+        if (purchaseAmount < 0) {
+            throw new UserInputException(NEGATIVE_INTEGER);
         }
     }
+
+    private static void validateNotDividedUp(int purchaseAmount) {
+        if (purchaseAmount % LOTTO_PRICE_UNIT != 0) {
+            throw new UserInputException(NOT_DIVIDED_UP);
+        }
+    }
+
 }

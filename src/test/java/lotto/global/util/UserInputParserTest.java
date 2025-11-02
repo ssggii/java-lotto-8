@@ -5,31 +5,43 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import static lotto.global.exception.ErrorCode.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class UserInputParserTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"3.5", "3@!", "50.1."})
-    @DisplayName("정수 형태가 아닌 문자열을 파싱하는 경우 예외가 발생한다.")
+    @DisplayName("정수 형태가 아닌 구입 금액을 파싱하는 경우 예외가 발생한다.")
     void testNotIntegerFormatStringTest(String input) {
         // when, then
-        assertThatThrownBy(() -> UserInputParser.parsePositiveInteger(input))
+        assertThatThrownBy(() -> UserInputParser.parsePurchaseAmount(input))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("정수로 변환할 수 없습니다");
+                .hasMessageContaining(NOT_NUMBER_FORMAT.getMessage());
 
     }
 
     @Test
-    @DisplayName("변환한 값이 음수인 경우 예외가 발생한다.")
+    @DisplayName("구입 금액이 음수인 경우 예외가 발생한다.")
     void testNegativeNumberTest() {
         // given
         String input = "-10";
 
         // when, then
-        assertThatThrownBy(() -> UserInputParser.parsePositiveInteger(input))
+        assertThatThrownBy(() -> UserInputParser.parsePurchaseAmount(input))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("변환값이 음수입니다");
+                .hasMessageContaining(NEGATIVE_INTEGER.getMessage());
     }
 
+    @Test
+    @DisplayName("구입 금액이 1000원으로 나누어 떨어지지 않으면 예외가 발생한다.")
+    void notDividedUpTest() {
+        // given
+        String purchaseAmountInput = "3500";
+
+        // when, then
+        assertThatThrownBy(() -> UserInputParser.parsePurchaseAmount(purchaseAmountInput))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining(NOT_DIVIDED_UP.getMessage());
+    }
 }
