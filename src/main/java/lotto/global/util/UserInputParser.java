@@ -79,11 +79,18 @@ public class UserInputParser {
         }
     }
 
-    public static int parseBonusNumber(String bonusNumberInput) {
+    public static int parseBonusNumber(String bonusNumberInput, Set<Integer> winningNumbers) {
         int bonusNumber = Integer.parseInt(bonusNumberInput);
         validateNegativeNumber(bonusNumber);
         validateNumberRange(bonusNumber);
+        validateUnique(winningNumbers, bonusNumber);
         return bonusNumber;
+    }
+
+    private static void validateUnique(Set<Integer> winningNumbers, int bonusNumber) {
+        if (winningNumbers.contains(bonusNumber)) {
+            throw new UserInputException(NOT_UNIQUE_NUMBERS);
+        }
     }
 
     private static void validateNumberRange(int bonusNumber) {

@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.util.Set;
+
 import static lotto.global.exception.ErrorCode.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -97,9 +99,10 @@ class UserInputParserTest {
     void negativeBonusNumberTest() {
         // given
         String bonusNumberInput = "-7";
+        Set<Integer> winningNumbers = Set.of(1, 2, 3, 4, 5, 6);
 
         // when, then
-        assertThatThrownBy(() -> UserInputParser.parseBonusNumber(bonusNumberInput))
+        assertThatThrownBy(() -> UserInputParser.parseBonusNumber(bonusNumberInput, winningNumbers))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining(NEGATIVE_DIGIT.getMessage());
 
@@ -110,10 +113,24 @@ class UserInputParserTest {
     void BonusNumberOutOfRangeTest() {
         // given
         String bonusNumberInput = "46";
+        Set<Integer> winningNumbers = Set.of(1, 2, 3, 4, 5, 6);
 
         // when, then
-        assertThatThrownBy(() -> UserInputParser.parseBonusNumber(bonusNumberInput))
+        assertThatThrownBy(() -> UserInputParser.parseBonusNumber(bonusNumberInput, winningNumbers))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining(INVALID_NUMBER_RANGE.getMessage());
+    }
+
+    @Test
+    @DisplayName("보너스 번호가 당첨 번호의 숫자와 중복되면 예외가 발생한다.")
+    void notUniqueBonusNumberTest() {
+        // given
+        Set<Integer> winningNumbers = Set.of(1, 2, 3, 4, 5, 6);
+        String bonusNumberInput = "6";
+
+        // when, then
+        assertThatThrownBy(() -> UserInputParser.parseBonusNumber(bonusNumberInput, winningNumbers))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining(NOT_UNIQUE_NUMBERS.getMessage());
     }
 }

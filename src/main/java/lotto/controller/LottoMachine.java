@@ -32,6 +32,7 @@ public class LottoMachine {
         List<Lotto> lottos = lottoIssuer.issue(purchaseAmount, DEFAULT_LOTTO_PRICE);
         outputView.printLottoNumbers(lottos);
         Set<Integer> winningNumber = getValidWinningNumber();
+        int bonusNumber = getValidBonusNumber(winningNumber);
 
     }
 
@@ -59,12 +60,12 @@ public class LottoMachine {
         }
     }
 
-    private int getBonusNumber() {
+    private int getValidBonusNumber(Set<Integer> winningNumber) {
         while (true) {
             try {
                 String bonusNumberInput = inputView.getBonusNumberInput();
                 outputView.newLine();
-                return UserInputParser.parseBonusNumber(bonusNumberInput);
+                return UserInputParser.parseBonusNumber(bonusNumberInput, winningNumber);
             } catch (UserInputException e) {
                 outputView.printErrorMessage(e.getErrorCode().getMessage());
             }
