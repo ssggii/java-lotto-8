@@ -14,10 +14,10 @@ public class LottoDrawer {
         Set<Integer> winningNumbers = winningCondition.winningNumbers();
 
         lottos.forEach(lotto -> {
-            int hittingCount = lotto.findHittingNumberCount(winningNumbers);
+            int hittingCount = lotto.findHittingNumberCount(winningNumbers); // 당첨 번호와 일치하는 숫자 개수
             boolean hitBonus = decideBonusHit(winningCondition, lotto, hittingCount);
             Ranking ranking = Ranking.from(hittingCount, hitBonus);
-            drawResults.add(DrawResult.of(lotto.getNumbers(), ranking));
+            drawResults.add(DrawResult.of(lotto, ranking));
         });
 
         return drawResults;

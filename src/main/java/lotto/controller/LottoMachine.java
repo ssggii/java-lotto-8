@@ -40,7 +40,7 @@ public class LottoMachine {
         WinningCondition winningCondition = WinningCondition.of(winningNumber, bonusNumber);
 
         List<DrawResult> drawResults = lottoDrawer.decideRankings(lottos, winningCondition);
-        outputView.printDrawResults(drawResults);
+//        outputView.printDrawResults(drawResults);
 
     }
 
