@@ -1,9 +1,11 @@
 package lotto.view;
 
+import lotto.dto.DrawResult;
 import lotto.model.Lotto;
 
 import java.util.List;
 
+import static lotto.global.ViewMessage.DRAW_RESULT_INFO;
 import static lotto.global.ViewMessage.LOTTO_COUNT_INFO;
 
 public class OutputView {
@@ -21,6 +23,10 @@ public class OutputView {
         System.out.println(lottoCountMessage);
         lottos.stream().map(Lotto::getNumbers).forEach(System.out::println);
         newLine();
+    }
+
+    public void printDrawResults(List<DrawResult> drawResults) {
+        System.out.println(DRAW_RESULT_INFO.getMessage());
     }
 
 }

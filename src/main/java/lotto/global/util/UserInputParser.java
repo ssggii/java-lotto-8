@@ -48,7 +48,6 @@ public class UserInputParser {
             validate(winningNumbers);
             return winningNumbers;
         } catch (NumberFormatException e) {
-            System.out.println(e.getMessage());
             throw new UserInputException(NOT_NUMBER_FORMAT);
         }
     }

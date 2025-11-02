@@ -1,7 +1,7 @@
 package lotto.model;
 
-import lotto.dto.AllWinningNumbers;
 import lotto.dto.DrawResult;
+import lotto.dto.WinningCondition;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +20,7 @@ class LottoDrawerTest {
         LottoDrawer lottoDrawer = new LottoDrawer();
         Set<Integer> winningNumbers = Set.of(1, 2, 3, 4, 5, 6);
         int bonusNumber = 7;
-        AllWinningNumbers allWinningNumbers = AllWinningNumbers.of(winningNumbers, bonusNumber);
+        WinningCondition winningCondition = WinningCondition.of(winningNumbers, bonusNumber);
 
         List<Lotto> lottos = new ArrayList<>();
         lottos.add(Lotto.from(List.of(1, 2, 3, 4, 5, 6))); // 1등
@@ -32,9 +32,9 @@ class LottoDrawerTest {
         lottos.add(Lotto.from(List.of(1, 14, 10, 11, 12, 13))); // 꽝
         lottos.add(Lotto.from(List.of(15, 21, 10, 11, 12, 13))); // 꽝
         lottos.add(Lotto.from(List.of(15, 21, 10, 11, 12, 7))); // 꽝
-        
+
         // when
-        List<DrawResult> drawResults = lottoDrawer.decideRankings(lottos, allWinningNumbers);
+        List<DrawResult> drawResults = lottoDrawer.decideRankings(lottos, winningCondition);
 
         // then
         assertThat(drawResults.get(0).ranking()).isEqualTo(Ranking.FIRST);

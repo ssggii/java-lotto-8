@@ -1,5 +1,7 @@
 package lotto.controller;
 
+import lotto.dto.DrawResult;
+import lotto.dto.WinningCondition;
 import lotto.global.exception.UserInputException;
 import lotto.global.util.UserInputParser;
 import lotto.model.Lotto;
@@ -29,10 +31,16 @@ public class LottoMachine {
 
     public void on() {
         int purchaseAmount = getValidPurchaseAmount();
+
         List<Lotto> lottos = lottoIssuer.issue(purchaseAmount, DEFAULT_LOTTO_PRICE);
         outputView.printLottoNumbers(lottos);
+
         Set<Integer> winningNumber = getValidWinningNumber();
         int bonusNumber = getValidBonusNumber(winningNumber);
+        WinningCondition winningCondition = WinningCondition.of(winningNumber, bonusNumber);
+
+        List<DrawResult> drawResults = lottoDrawer.decideRankings(lottos, winningCondition);
+        outputView.printDrawResults(drawResults);
 
     }
 

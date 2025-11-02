@@ -1,6 +1,6 @@
 package lotto.model;
 
-import lotto.dto.AllWinningNumbers;
+import lotto.dto.WinningCondition;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -62,10 +62,10 @@ public class Lotto {
         return hittingNumbers.size();
     }
 
-    public boolean isHitBonusNumber(AllWinningNumbers allWinningNumbers) {
-        int bonusNumber = allWinningNumbers.bonusNumber();
+    public boolean isHitBonusNumber(WinningCondition winningCondition) {
+        int bonusNumber = winningCondition.bonusNumber();
         Set<Integer> notHitNumbers = numbers.stream()
-                .filter(number -> !allWinningNumbers.winningNumbers().contains(number))
+                .filter(number -> !winningCondition.winningNumbers().contains(number))
                 .collect(Collectors.toSet());
         return notHitNumbers.contains(bonusNumber);
     }
