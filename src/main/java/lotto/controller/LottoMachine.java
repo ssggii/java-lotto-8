@@ -9,6 +9,7 @@ import lotto.view.InputView;
 import lotto.view.OutputView;
 
 import java.util.List;
+import java.util.Set;
 
 import static lotto.model.LottoIssuer.DEFAULT_LOTTO_PRICE;
 
@@ -38,6 +39,18 @@ public class LottoMachine {
                 String purchaseAmountInput = inputView.getPurchaseAmountInput();
                 outputView.newLine();
                 return UserInputParser.parsePurchaseAmount(purchaseAmountInput);
+            } catch (UserInputException e) {
+                outputView.printErrorMessage(e.getErrorCode().getMessage());
+            }
+        }
+    }
+
+    private Set<Integer> getValidWinningNumber() {
+        while (true) {
+            try {
+                String winningNumberInput = inputView.getWinningNumberInput();
+                outputView.newLine();
+//                return UserInputParser.parsePurchaseAmount(purchaseAmountInput);
             } catch (UserInputException e) {
                 outputView.printErrorMessage(e.getErrorCode().getMessage());
             }

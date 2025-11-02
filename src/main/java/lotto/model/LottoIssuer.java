@@ -5,7 +5,7 @@ import camp.nextstep.edu.missionutils.Randoms;
 import java.util.ArrayList;
 import java.util.List;
 
-import static lotto.global.exception.ErrorCode.NEGATIVE_PURCHASE_AMOUNT;
+import static lotto.global.exception.ErrorCode.NEGATIVE_DIGIT;
 import static lotto.global.exception.ErrorCode.PURCHASE_AMOUNT_NOT_DIVIDED_UP;
 import static lotto.model.Lotto.*;
 
@@ -37,7 +37,7 @@ public class LottoIssuer {
 
     private void validateNegativeNumber(int purchaseAmount) {
         if (purchaseAmount < 0) {
-            throw new IllegalArgumentException(NEGATIVE_PURCHASE_AMOUNT.getMessage());
+            throw new IllegalArgumentException(NEGATIVE_DIGIT.getMessage());
         }
     }
 
