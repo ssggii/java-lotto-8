@@ -4,13 +4,17 @@ import lotto.dto.DrawResult;
 import lotto.dto.WinningCountResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 import java.util.Map;
 
+import static lotto.global.exception.ErrorCode.NEGATIVE_DIGIT;
 import static lotto.model.Ranking.FIRST;
 import static lotto.model.Ranking.SECOND;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class WinningResultProcessorTest {
 
@@ -33,4 +37,32 @@ class WinningResultProcessorTest {
         assertThat(winningCounts.get(SECOND)).isEqualTo(1);
     }
 
+    @Test
+    @DisplayName("구입 금액과 전체 수익금으로 전체 수익률을 계산한다.")
+    void calculateReturnRateTest() {
+        // given
+        int purchaseAmount = 8000;
+        int totalPrizeMoney = 5000;
+        WinningResultProcessor winningResultProcessor = new WinningResultProcessor();
+
+        // when
+        double returnRate = winningResultProcessor.calculateReturnRate(purchaseAmount, totalPrizeMoney);
+
+        // then
+        assertThat(returnRate).isEqualTo(62.5);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, -3000})
+    @DisplayName("구입 금액이 0 이하이면 예외가 발생한다.")
+    void calculateReturnRateWhenPurchaseAmountIsUnder0(int purchaseAmount) {
+        // given
+        WinningResultProcessor winningResultProcessor = new WinningResultProcessor();
+
+        // when, then
+        assertThatThrownBy(() -> winningResultProcessor.calculateReturnRate(purchaseAmount, 5000))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining(NEGATIVE_DIGIT.getMessage());
+
+    }
 }
