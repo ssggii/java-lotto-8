@@ -29,8 +29,8 @@ public class UserInputParser {
         validateNotDividedUp(purchaseAmount);
     }
 
-    private static void validateNegativeNumber(int purchaseAmount) {
-        if (purchaseAmount < 0) {
+    private static void validateNegativeNumber(int inputNum) {
+        if (inputNum < 0) {
             throw new UserInputException(NEGATIVE_DIGIT);
         }
     }
@@ -56,10 +56,10 @@ public class UserInputParser {
     private static void validate(Set<Integer> winningNumbers) {
         validateNumbersCount(winningNumbers);
         validateNegativeNumber(winningNumbers);
-        validateNumberRange(winningNumbers);
+        validateAllNumberRange(winningNumbers);
     }
 
-    private static void validateNumberRange(Set<Integer> winningNumbers) {
+    private static void validateAllNumberRange(Set<Integer> winningNumbers) {
         boolean isOutOfRange = winningNumbers.stream().anyMatch(number -> number < NUMBER_RANGE_MIN || number > NUMBER_RANGE_MAX);
         if (isOutOfRange) {
             throw new UserInputException(INVALID_NUMBER_RANGE);
@@ -76,6 +76,19 @@ public class UserInputParser {
     private static void validateNumbersCount(Set<Integer> winningNumbers) {
         if (winningNumbers.size() != NUMBERS_SIZE) {
             throw new UserInputException(INVALID_NUMBERS_SIZE);
+        }
+    }
+
+    public static int parseBonusNumber(String bonusNumberInput) {
+        int bonusNumber = Integer.parseInt(bonusNumberInput);
+        validateNegativeNumber(bonusNumber);
+        validateNumberRange(bonusNumber);
+        return bonusNumber;
+    }
+
+    private static void validateNumberRange(int bonusNumber) {
+        if (bonusNumber < NUMBER_RANGE_MIN || bonusNumber > NUMBER_RANGE_MAX) {
+            throw new UserInputException(INVALID_NUMBER_RANGE);
         }
     }
 

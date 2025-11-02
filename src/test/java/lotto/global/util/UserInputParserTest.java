@@ -91,4 +91,29 @@ class UserInputParserTest {
                 .hasMessageContaining(INVALID_NUMBER_RANGE.getMessage());
 
     }
+
+    @Test
+    @DisplayName("보너스 번호가 음수이면 예외가 발생한다.")
+    void negativeBonusNumberTest() {
+        // given
+        String bonusNumberInput = "-7";
+
+        // when, then
+        assertThatThrownBy(() -> UserInputParser.parseBonusNumber(bonusNumberInput))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining(NEGATIVE_DIGIT.getMessage());
+
+    }
+
+    @Test
+    @DisplayName("보너스 번호가 1~45 사이의 범위가 아니면 예외가 발생한다.")
+    void BonusNumberOutOfRangeTest() {
+        // given
+        String bonusNumberInput = "46";
+
+        // when, then
+        assertThatThrownBy(() -> UserInputParser.parseBonusNumber(bonusNumberInput))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining(INVALID_NUMBER_RANGE.getMessage());
+    }
 }

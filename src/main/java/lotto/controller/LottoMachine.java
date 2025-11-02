@@ -59,4 +59,16 @@ public class LottoMachine {
         }
     }
 
+    private int getBonusNumber() {
+        while (true) {
+            try {
+                String bonusNumberInput = inputView.getBonusNumberInput();
+                outputView.newLine();
+                return UserInputParser.parseBonusNumber(bonusNumberInput);
+            } catch (UserInputException e) {
+                outputView.printErrorMessage(e.getErrorCode().getMessage());
+            }
+        }
+    }
+
 }
