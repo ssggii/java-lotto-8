@@ -31,6 +31,8 @@ public class LottoMachine {
         int purchaseAmount = getValidPurchaseAmount();
         List<Lotto> lottos = lottoIssuer.issue(purchaseAmount, DEFAULT_LOTTO_PRICE);
         outputView.printLottoNumbers(lottos);
+        Set<Integer> winningNumber = getValidWinningNumber();
+
     }
 
     private int getValidPurchaseAmount() {
@@ -50,7 +52,7 @@ public class LottoMachine {
             try {
                 String winningNumberInput = inputView.getWinningNumberInput();
                 outputView.newLine();
-//                return UserInputParser.parsePurchaseAmount(purchaseAmountInput);
+                return UserInputParser.parseWinningNumber(winningNumberInput);
             } catch (UserInputException e) {
                 outputView.printErrorMessage(e.getErrorCode().getMessage());
             }
