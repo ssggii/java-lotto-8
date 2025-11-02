@@ -35,7 +35,6 @@ public class LottoMachine {
 
     public void on() {
         int purchaseAmount = getValidPurchaseAmount();
-
         List<Lotto> lottos = lottoIssuer.issue(purchaseAmount, DEFAULT_LOTTO_PRICE);
         outputView.printLottoNumbers(lottos);
 
@@ -47,6 +46,8 @@ public class LottoMachine {
         WinningCountResult winningCounts = winningResultProcessor.calculateWinningCount(drawResults);
         outputView.printDrawResults(winningCounts);
 
+        double returnRate = winningResultProcessor.calculateReturnRate(purchaseAmount, winningCounts);
+        outputView.printReturnRate(returnRate);
     }
 
     private int getValidPurchaseAmount() {

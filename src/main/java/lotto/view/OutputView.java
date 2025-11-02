@@ -42,9 +42,14 @@ public class OutputView {
 
                     StringBuilder builder = new StringBuilder("%,d개 일치 (%,d원) - %,d개\n");
                     if (isHitBonus) {
-                        builder.insert(7, ", 보너스볼 일치");
+                        builder.insert(7, ", 보너스 볼 일치");
                     }
                     System.out.printf(builder.toString(), hittingCount, prize, winningCount);
                 });
+        newLine();
+    }
+
+    public void printReturnRate(double returnRate) {
+        System.out.printf("총 수익률은 %.1f%%입니다.", returnRate);
     }
 }
