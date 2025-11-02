@@ -20,6 +20,7 @@ public class OutputView {
         String lottoCountMessage = LOTTO_COUNT_INFO.getMessage(lottos.size());
         System.out.println(lottoCountMessage);
         lottos.stream().map(Lotto::getNumbers).forEach(System.out::println);
+        newLine();
     }
 
 }

@@ -3,8 +3,7 @@ package lotto.view;
 import camp.nextstep.edu.missionutils.Console;
 import lotto.global.util.StringValidator;
 
-import static lotto.global.ViewMessage.PURCHASE_INPUT_INFO;
-import static lotto.global.ViewMessage.WINNING_NUMBERS_INPUT_INFO;
+import static lotto.global.ViewMessage.*;
 
 public class InputView {
 
@@ -15,6 +14,11 @@ public class InputView {
 
     public String getWinningNumberInput() {
         System.out.println(WINNING_NUMBERS_INPUT_INFO.getMessage());
+        return getTrimmed(Console.readLine());
+    }
+
+    public String getBonusNumberInput() {
+        System.out.println(BONUS_NUMBER_INPUT_INFO.getMessage());
         return getTrimmed(Console.readLine());
     }
 
