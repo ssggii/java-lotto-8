@@ -11,7 +11,7 @@ import static lotto.model.Lotto.*;
 
 public class LottoIssuer {
 
-    private static final int DEFAULT_LOTTO_PRICE = 1000;
+    public static final int DEFAULT_LOTTO_PRICE = 1000;
 
     public List<Lotto> issue(int purchaseAmount, int lottoPrice) {
         int lottoCount = calculateLottoCount(purchaseAmount, lottoPrice);
