@@ -28,7 +28,7 @@ class WinningResultProcessorTest {
         WinningCountResult winningCountResult = winningResultProcessor.calculateWinningCount(drawResults);
 
         // then
-        Map<Ranking, Integer> winningCounts = winningCountResult.winningCountForRanking();
+        Map<Ranking, Integer> winningCounts = winningCountResult.winningCountMap();
         assertThat(winningCounts.get(FIRST)).isEqualTo(2);
         assertThat(winningCounts.get(SECOND)).isEqualTo(1);
     }

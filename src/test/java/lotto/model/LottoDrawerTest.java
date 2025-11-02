@@ -29,23 +29,17 @@ class LottoDrawerTest {
         lottos.add(Lotto.from(List.of(1, 2, 3, 4, 10, 11))); // 4등
         lottos.add(Lotto.from(List.of(1, 2, 3, 10, 11, 12))); // 5등
         lottos.add(Lotto.from(List.of(1, 2, 10, 11, 12, 13))); // 꽝
-        lottos.add(Lotto.from(List.of(1, 14, 10, 11, 12, 13))); // 꽝
-        lottos.add(Lotto.from(List.of(15, 21, 10, 11, 12, 13))); // 꽝
-        lottos.add(Lotto.from(List.of(15, 21, 10, 11, 12, 7))); // 꽝
 
         // when
         List<DrawResult> drawResults = lottoDrawer.decideRankings(lottos, winningCondition);
 
         // then
+        assertThat(drawResults.size()).isEqualTo(5);
         assertThat(drawResults.get(0).ranking()).isEqualTo(Ranking.FIRST);
         assertThat(drawResults.get(1).ranking()).isEqualTo(Ranking.SECOND);
         assertThat(drawResults.get(2).ranking()).isEqualTo(Ranking.THIRD);
         assertThat(drawResults.get(3).ranking()).isEqualTo(Ranking.FOURTH);
         assertThat(drawResults.get(4).ranking()).isEqualTo(Ranking.FIFTH);
-        assertThat(drawResults.get(5).ranking()).isEqualTo(Ranking.NONE);
-        assertThat(drawResults.get(6).ranking()).isEqualTo(Ranking.NONE);
-        assertThat(drawResults.get(7).ranking()).isEqualTo(Ranking.NONE);
-        assertThat(drawResults.get(8).ranking()).isEqualTo(Ranking.NONE);
     }
 
 }

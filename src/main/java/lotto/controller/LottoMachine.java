@@ -2,11 +2,13 @@ package lotto.controller;
 
 import lotto.dto.DrawResult;
 import lotto.dto.WinningCondition;
+import lotto.dto.WinningCountResult;
 import lotto.global.exception.UserInputException;
 import lotto.global.util.UserInputParser;
 import lotto.model.Lotto;
 import lotto.model.LottoDrawer;
 import lotto.model.LottoIssuer;
+import lotto.model.WinningResultProcessor;
 import lotto.view.InputView;
 import lotto.view.OutputView;
 
@@ -21,12 +23,14 @@ public class LottoMachine {
     private final OutputView outputView;
     private final LottoIssuer lottoIssuer;
     private final LottoDrawer lottoDrawer;
+    private final WinningResultProcessor winningResultProcessor;
 
-    public LottoMachine(InputView inputView, OutputView outputView, LottoIssuer lottoIssuer, LottoDrawer lottoDrawer) {
+    public LottoMachine(InputView inputView, OutputView outputView, LottoIssuer lottoIssuer, LottoDrawer lottoDrawer, WinningResultProcessor winningResultProcessor) {
         this.inputView = inputView;
         this.outputView = outputView;
         this.lottoIssuer = lottoIssuer;
         this.lottoDrawer = lottoDrawer;
+        this.winningResultProcessor = winningResultProcessor;
     }
 
     public void on() {
@@ -40,7 +44,8 @@ public class LottoMachine {
         WinningCondition winningCondition = WinningCondition.of(winningNumber, bonusNumber);
 
         List<DrawResult> drawResults = lottoDrawer.decideRankings(lottos, winningCondition);
-//        outputView.printDrawResults(drawResults);
+        WinningCountResult winningCounts = winningResultProcessor.calculateWinningCount(drawResults);
+        outputView.printDrawResults(winningCounts);
 
     }
 

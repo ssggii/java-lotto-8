@@ -3,6 +3,7 @@ package lotto;
 import lotto.controller.LottoMachine;
 import lotto.model.LottoDrawer;
 import lotto.model.LottoIssuer;
+import lotto.model.WinningResultProcessor;
 import lotto.view.InputView;
 import lotto.view.OutputView;
 
@@ -12,7 +13,8 @@ public class Application {
         OutputView outputView = new OutputView();
         LottoIssuer lottoIssuer = new LottoIssuer();
         LottoDrawer lottoDrawer = new LottoDrawer();
-        LottoMachine lottoMachine = new LottoMachine(inputView, outputView, lottoIssuer, lottoDrawer);
+        WinningResultProcessor winningResultProcessor = new WinningResultProcessor();
+        LottoMachine lottoMachine = new LottoMachine(inputView, outputView, lottoIssuer, lottoDrawer, winningResultProcessor);
 
         lottoMachine.on();
     }
