@@ -59,4 +59,18 @@ class LottoIssuerTest {
                 .hasMessageContaining(NEGATIVE_PURCHASE_AMOUNT.getMessage());
 
     }
+
+    @Test
+    @DisplayName("구입 금액이 1000원으로 나누어 떨어지지 않으면 예외가 발생한다.")
+    void notDividedUp() {
+        // given
+        int purchaseAmount = 3500;
+        int lottoPrice = 1000;
+        LottoIssuer lottoIssuer = new LottoIssuer();
+
+        // when, then
+        assertThatThrownBy(() -> lottoIssuer.issue(purchaseAmount, lottoPrice))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("구입 금액을 1000원 단위로 입력해주세요");
+    }
 }

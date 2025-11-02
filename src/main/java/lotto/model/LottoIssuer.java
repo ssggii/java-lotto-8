@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static lotto.global.exception.ErrorCode.NEGATIVE_PURCHASE_AMOUNT;
+import static lotto.global.exception.ErrorCode.NOT_DIVIDED_UP_PURCHASE_AMOUNT;
 import static lotto.model.Lotto.*;
 
 public class LottoIssuer {
@@ -24,10 +25,22 @@ public class LottoIssuer {
     }
 
     private void validatePurchaseAmount(int purchaseAmount) {
+        validateNegativePurchaseAmount(purchaseAmount);
+        validatePurchaseAmountDividedUp(purchaseAmount);
+    }
+
+    private void validatePurchaseAmountDividedUp(int purchaseAmount) {
+        if (purchaseAmount % DEFAULT_LOTTO_PRICE != 0) {
+            throw new IllegalArgumentException(NOT_DIVIDED_UP_PURCHASE_AMOUNT.getMessage());
+        }
+    }
+
+    private void validateNegativePurchaseAmount(int purchaseAmount) {
         if (purchaseAmount < 0) {
             throw new IllegalArgumentException(NEGATIVE_PURCHASE_AMOUNT.getMessage());
         }
     }
+
 
     private int getLottoPriceOrDefault(int lottoPrice) {
         if (lottoPrice <= 0) {

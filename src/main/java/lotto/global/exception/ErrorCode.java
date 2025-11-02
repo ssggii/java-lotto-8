@@ -8,7 +8,8 @@ public enum ErrorCode {
     NEGATIVE_PURCHASE_AMOUNT("[ERROR] 구입 금액은 음수일 수 없습니다."),
     BLANK_VALUE("[ERROR] 입력값이 빈 문자열이거나 공백입니다."),
     NOT_INTEGER_FORMAT("[ERROR] 정수로 변환할 수 없습니다 : %s"),
-    NOT_POSITIVE_INTEGER("[ERROR] 변환값이 음수입니다 : %s");
+    NOT_POSITIVE_INTEGER("[ERROR] 변환값이 음수입니다 : %s"),
+    NOT_DIVIDED_UP_PURCHASE_AMOUNT("[ERROR] 구입 금액을 1000원 단위로 입력해주세요");
 
     private final String message;
 
