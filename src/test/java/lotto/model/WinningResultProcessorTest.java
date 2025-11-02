@@ -38,18 +38,22 @@ class WinningResultProcessorTest {
     }
 
     @Test
-    @DisplayName("구입 금액과 전체 수익금으로 전체 수익률을 계산한다.")
+    @DisplayName("구입 금액과 순위별 당첨 횟수로 수익률을 계산한다.")
     void calculateReturnRateTest() {
         // given
+        WinningCountResult winningCountResult = WinningCountResult.create();
+        Map<Ranking, Integer> winningCounts = winningCountResult.winningCountMap();
+        winningCounts.put(FIRST, 2); // 1등 2번 당첨
+        winningCounts.put(SECOND, 1); // 2등 1번 당첨
         int purchaseAmount = 8000;
-        int totalPrizeMoney = 5000;
+
         WinningResultProcessor winningResultProcessor = new WinningResultProcessor();
 
         // when
-        double returnRate = winningResultProcessor.calculateReturnRate(purchaseAmount, totalPrizeMoney);
+        double returnRate = winningResultProcessor.calculateReturnRate(purchaseAmount, winningCountResult);
 
         // then
-        assertThat(returnRate).isEqualTo(62.5);
+        assertThat(returnRate).isEqualTo(50375000);
     }
 
     @ParameterizedTest
@@ -60,7 +64,7 @@ class WinningResultProcessorTest {
         WinningResultProcessor winningResultProcessor = new WinningResultProcessor();
 
         // when, then
-        assertThatThrownBy(() -> winningResultProcessor.calculateReturnRate(purchaseAmount, 5000))
+        assertThatThrownBy(() -> winningResultProcessor.calculateReturnRate(purchaseAmount, WinningCountResult.create()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining(NEGATIVE_DIGIT.getMessage());
 

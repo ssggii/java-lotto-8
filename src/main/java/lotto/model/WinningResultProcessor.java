@@ -4,6 +4,7 @@ import lotto.dto.DrawResult;
 import lotto.dto.WinningCountResult;
 import lotto.global.exception.UserInputException;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -26,15 +27,28 @@ public class WinningResultProcessor {
         return winningCountResult;
     }
 
-    public double calculateReturnRate(int purchaseAmount, int totalPrizeMoney) {
+    public double calculateReturnRate(int purchaseAmount, WinningCountResult winningCountResult) {
         validateNegativePurchaseAmount(purchaseAmount);
-        return (double) totalPrizeMoney / purchaseAmount * PERCENTAGE;
+        BigInteger totalPrizeMoney = calculateTotalPrizeMoney(winningCountResult);
+        return totalPrizeMoney.doubleValue() / (double) purchaseAmount * PERCENTAGE;
     }
 
     private void validateNegativePurchaseAmount(int purchaseAmount) {
         if (purchaseAmount <= 0) {
             throw new UserInputException(NEGATIVE_DIGIT);
         }
+    }
+
+    private BigInteger calculateTotalPrizeMoney(WinningCountResult winningCountResult) {
+        Map<Ranking, Integer> winningCounts = winningCountResult.winningCountMap();
+
+        return winningCounts.keySet().stream()
+                .map(ranking -> {
+                    long prize = ranking.getPrize();
+                    long winningCount = winningCounts.get(ranking);
+                    return BigInteger.valueOf(prize * winningCount);
+                })
+                .reduce(BigInteger.ZERO, BigInteger::add);
     }
 
 }
