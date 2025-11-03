@@ -4,10 +4,10 @@ import lotto.dto.WinningCountResult;
 import lotto.model.Lotto;
 import lotto.model.Ranking;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static lotto.global.ViewMessage.DRAW_RESULT_INFO;
 import static lotto.global.ViewMessage.LOTTO_COUNT_INFO;
@@ -23,32 +23,26 @@ public class OutputView {
     }
 
     public void printLottoNumbers(List<Lotto> lottos) {
-        String lottoCountMessage = LOTTO_COUNT_INFO.getMessage(lottos.size());
-        System.out.println(lottoCountMessage);
+        System.out.println(LOTTO_COUNT_INFO.getMessage(lottos.size()));
         lottos.stream().map(Lotto::getNumbers).forEach(System.out::println);
         newLine();
     }
 
     public void printDrawResults(WinningCountResult result) {
         System.out.println(DRAW_RESULT_INFO.getMessage());
-
         Map<Ranking, Integer> winningCounts = result.winningCountMap();
-        winningCounts.keySet().stream()
-                .filter(Objects::nonNull)
-                .sorted(Comparator.comparingInt(Ranking::ordinal).reversed())
+
+        Arrays.stream(Ranking.values())
+                .sorted(Comparator.comparingInt(Ranking::ordinal).reversed()) // 순위 역순 정렬
                 .forEach(ranking -> {
                     int winningCount = winningCounts.getOrDefault(ranking, 0);
-                    int hittingCount = ranking.getHittingCount();
-                    int prize = ranking.getPrize();
-                    Boolean isHitBonus = ranking.isHitBonus();
-
-                    StringBuilder builder = new StringBuilder("%,d개 일치 (%,d원) - %,d개\n");
-                    if (isHitBonus != null && isHitBonus) {
-                        builder.insert(7, ", 보너스 볼 일치");
-                    }
-                    System.out.printf(builder.toString(), hittingCount, prize, winningCount);
+                    System.out.printf(
+                            "%s (%,d원) - %,d개\n",
+                            ranking.getDescription(),
+                            ranking.getPrize(),
+                            winningCount
+                    );
                 });
-        newLine();
     }
 
     public void printReturnRate(double returnRate) {

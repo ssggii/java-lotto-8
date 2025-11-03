@@ -4,20 +4,22 @@ import java.util.Arrays;
 import java.util.Optional;
 
 public enum Ranking {
-    FIRST(6, 2_000_000_000, null),
-    SECOND(5, 30_000_000, true),
-    THIRD(5, 1_500_000, false),
-    FOURTH(4, 50_000, null),
-    FIFTH(3, 5_000, null);
+    FIRST(6, 2_000_000_000, null, "6개 일치"),
+    SECOND(5, 30_000_000, true, "5개 일치, 보너스 볼 일치"),
+    THIRD(5, 1_500_000, false, "5개 일치"),
+    FOURTH(4, 50_000, null, "4개 일치"),
+    FIFTH(3, 5_000, null, "3개 일치");
 
     private final int hittingCount;
     private final int prize;
     private final Boolean hitBonus;
+    private final String description;
 
-    Ranking(int hittingCount, int prize, Boolean hitBonus) {
+    Ranking(int hittingCount, int prize, Boolean hitBonus, String description) {
         this.hittingCount = hittingCount;
         this.prize = prize;
         this.hitBonus = hitBonus;
+        this.description = description;
     }
 
     public int getHittingCount() {
@@ -30,6 +32,10 @@ public enum Ranking {
 
     public Boolean isHitBonus() {
         return hitBonus;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public static Optional<Ranking> findRanking(int hittingCount, Boolean hitBonus) {
