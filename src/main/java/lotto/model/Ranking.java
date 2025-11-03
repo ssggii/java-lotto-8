@@ -32,9 +32,18 @@ public enum Ranking {
         return hitBonus;
     }
 
-    public static Optional<Ranking> from(int hittingCount, boolean hitBonus) {
+    public static Optional<Ranking> findRanking(int hittingCount, boolean hitBonus) {
+        // 5개 일치하면 보너스 당첨 여부까지 검사
+        if (hittingCount == 5) {
+            if (hitBonus) {
+                return Optional.of(SECOND);
+            }
+            return Optional.of(THIRD);
+        }
+
+        // 그 외의 경우 숫자 개수로만 순위 결정
         return Arrays.stream(values())
-                .filter(ranking -> ranking.hittingCount == hittingCount && ranking.hitBonus == hitBonus)
+                .filter(ranking -> ranking.getHittingCount() == hittingCount)
                 .findFirst();
     }
 }
