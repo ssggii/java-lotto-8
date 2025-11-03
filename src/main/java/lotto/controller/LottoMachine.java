@@ -14,6 +14,8 @@ import lotto.view.OutputView;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static lotto.model.LottoIssuer.DEFAULT_LOTTO_PRICE;
 
@@ -35,55 +37,71 @@ public class LottoMachine {
 
     public void on() {
         int purchaseAmount = getValidPurchaseAmount();
-        List<Lotto> lottos = lottoIssuer.issue(purchaseAmount, DEFAULT_LOTTO_PRICE);
-        outputView.printLottoNumbers(lottos);
 
-        Set<Integer> winningNumber = getValidWinningNumber();
-        int bonusNumber = getValidBonusNumber(winningNumber);
-        WinningCondition winningCondition = WinningCondition.of(winningNumber, bonusNumber);
+        List<Lotto> lottos = purchaseLottos(purchaseAmount);
 
-        List<DrawResult> drawResults = lottoDrawer.decideRankings(lottos, winningCondition);
-        WinningCountResult winningCounts = winningResultProcessor.calculateWinningCount(drawResults);
-        outputView.printDrawResults(winningCounts);
+        WinningCondition winningCondition = createWinningCondition();
 
-        double returnRate = winningResultProcessor.calculateReturnRate(purchaseAmount, winningCounts);
+        WinningCountResult winningCounts = getWinningCounts(lottos, winningCondition);
+
+        showReturnRate(purchaseAmount, winningCounts);
+    }
+
+    private void showReturnRate(int purchaseAmount, WinningCountResult winningCountResult) {
+        double returnRate = winningResultProcessor.calculateReturnRate(purchaseAmount, winningCountResult);
         outputView.printReturnRate(returnRate);
     }
 
-    private int getValidPurchaseAmount() {
+    private WinningCountResult getWinningCounts(List<Lotto> lottos, WinningCondition winningCondition) {
+        List<DrawResult> drawResults = lottoDrawer.decideRankings(lottos, winningCondition);
+        WinningCountResult winningCounts = winningResultProcessor.calculateWinningCount(drawResults);
+        outputView.printDrawResults(winningCounts);
+        return winningCounts;
+    }
+
+    private WinningCondition createWinningCondition() {
+        Set<Integer> winningNumber = getValidWinningNumber();
+        int bonusNumber = getValidBonusNumber(winningNumber);
+        return WinningCondition.of(winningNumber, bonusNumber);
+    }
+
+    private List<Lotto> purchaseLottos(int purchaseAmount) {
+        List<Lotto> lottos = lottoIssuer.issue(purchaseAmount, DEFAULT_LOTTO_PRICE);
+        outputView.printLottoNumbers(lottos);
+        return lottos;
+    }
+
+    /**
+     * 사용자 입력을 받고, 유효성 검사에 통과할 때까지 재시도하는 공통 메서드
+     *
+     * @param inputSupplier 사용자 입력 받는 로직
+     * @param parser        입력(String)을 받아 파싱/검증하는 로직
+     * @param <T>           파싱 후 반환될 타입
+     * @return 유효성 검사를 통과한 값
+     */
+    private <T> T getValidInput(Supplier<String> inputSupplier, Function<String, T> parser) {
         while (true) {
             try {
-                String purchaseAmountInput = inputView.getPurchaseAmountInput();
+                String input = inputSupplier.get();
                 outputView.newLine();
-                return UserInputParser.parsePurchaseAmount(purchaseAmountInput);
+                return parser.apply(input);
             } catch (UserInputException e) {
                 outputView.printErrorMessage(e.getErrorCode().getMessage());
             }
         }
+    }
+
+    private int getValidPurchaseAmount() {
+        return getValidInput(inputView::getPurchaseAmountInput, UserInputParser::parsePurchaseAmount);
     }
 
     private Set<Integer> getValidWinningNumber() {
-        while (true) {
-            try {
-                String winningNumberInput = inputView.getWinningNumberInput();
-                outputView.newLine();
-                return UserInputParser.parseWinningNumber(winningNumberInput);
-            } catch (UserInputException e) {
-                outputView.printErrorMessage(e.getErrorCode().getMessage());
-            }
-        }
+        return getValidInput(inputView::getWinningNumberInput, UserInputParser::parseWinningNumber);
     }
 
     private int getValidBonusNumber(Set<Integer> winningNumber) {
-        while (true) {
-            try {
-                String bonusNumberInput = inputView.getBonusNumberInput();
-                outputView.newLine();
-                return UserInputParser.parseBonusNumber(bonusNumberInput, winningNumber);
-            } catch (UserInputException e) {
-                outputView.printErrorMessage(e.getErrorCode().getMessage());
-            }
-        }
+        return getValidInput(inputView::getBonusNumberInput,
+                (input) -> UserInputParser.parseBonusNumber(input, winningNumber));
     }
 
 }
