@@ -41,7 +41,6 @@ public class LottoIssuer {
         }
     }
 
-
     private int getLottoPriceOrDefault(int lottoPrice) {
         if (lottoPrice <= 0) {
             lottoPrice = DEFAULT_LOTTO_PRICE;

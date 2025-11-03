@@ -56,14 +56,14 @@ public class UserInputParser {
     private static void validateWinningNumbers(Set<Integer> winningNumbers, List<Integer> originalWinningNumbers) {
         validateUniqueWinningNumbers(winningNumbers, originalWinningNumbers);
         validateNegativeNumber(winningNumbers);
-        validateAllNumberRange(winningNumbers);
+        validateValidRange(winningNumbers);
     }
 
     private static List<String> getWinningNumberTokens(String winningNumberInput) {
         List<String> winningNumberTokens = Arrays.stream(winningNumberInput.split(DIGIT_DELIMITER))
                 .map(String::trim)
                 .toList();
-        validateNumbersCount(winningNumberTokens); // 개수 검증
+        validateNumbersCount(winningNumberTokens);
         return winningNumberTokens;
     }
 
@@ -83,11 +83,7 @@ public class UserInputParser {
         }
     }
 
-    private static void validate(Set<Integer> winningNumbers) {
-
-    }
-
-    private static void validateAllNumberRange(Set<Integer> winningNumbers) {
+    private static void validateValidRange(Set<Integer> winningNumbers) {
         boolean isOutOfRange = winningNumbers.stream().anyMatch(number -> number < NUMBER_RANGE_MIN || number > NUMBER_RANGE_MAX);
         if (isOutOfRange) {
             throw new UserInputException(INVALID_NUMBER_RANGE);
@@ -108,11 +104,15 @@ public class UserInputParser {
     }
 
     public static int parseBonusNumber(String bonusNumberInput, Set<Integer> winningNumbers) {
-        int bonusNumber = Integer.parseInt(bonusNumberInput);
-        validateNegativeNumber(bonusNumber);
-        validateNumberRange(bonusNumber);
-        validateUniqueBonusNumber(winningNumbers, bonusNumber);
-        return bonusNumber;
+        try {
+            int bonusNumber = Integer.parseInt(bonusNumberInput);
+            validateNegativeNumber(bonusNumber);
+            validateNumberRange(bonusNumber);
+            validateUniqueBonusNumber(winningNumbers, bonusNumber);
+            return bonusNumber;
+        } catch (NumberFormatException e) {
+            throw new UserInputException(NOT_NUMBER_FORMAT);
+        }
     }
 
     private static void validateUniqueBonusNumber(Set<Integer> winningNumbers, int bonusNumber) {

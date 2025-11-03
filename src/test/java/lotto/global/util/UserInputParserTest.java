@@ -145,4 +145,17 @@ class UserInputParserTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining(NOT_UNIQUE_NUMBERS.getMessage());
     }
+
+    @Test
+    @DisplayName("보너스 번호가 숫자 형태가 아니면 예외가 발생한다.")
+    void notNumberFormatBonusNumberTest() {
+        // given
+        Set<Integer> winningNumbers = Set.of(1, 2, 3, 4, 5, 6);
+        String bonusNumberInput = "@3";
+
+        // when, then
+        assertThatThrownBy(() -> UserInputParser.parseBonusNumber(bonusNumberInput, winningNumbers))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining(NOT_NUMBER_FORMAT.getMessage());
+    }
 }
