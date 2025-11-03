@@ -1,5 +1,7 @@
 package lotto.global.exception;
 
+import java.util.Arrays;
+
 public enum ErrorCode {
 
     INVALID_NUMBERS_SIZE("[ERROR] 로또 번호는 6개여야 합니다."),
@@ -9,7 +11,8 @@ public enum ErrorCode {
     NOT_NUMBER_FORMAT("[ERROR] 입력값을 숫자로 변환할 수 없습니다."),
     NEGATIVE_DIGIT("[ERROR] 입력값으로 음수는 불가능합니다."),
     PURCHASE_AMOUNT_NOT_DIVIDED_UP("[ERROR] 구입 금액은 1000원 단위로 나누어 떨어져야 합니다."),
-    INVALID_PURCHASE_AMOUNT("[ERROR] 구입 금액을 1000원 단위로 입력해주세요.");
+    INVALID_PURCHASE_AMOUNT("[ERROR] 구입 금액을 1000원 단위로 입력해주세요."),
+    INTERNAL_SERVER_ERROR("[ERROR] 알 수 없는 에러가 발생했습니다. 다시 입력해주세요.");
 
 
     private final String message;
@@ -20,6 +23,13 @@ public enum ErrorCode {
 
     public String getMessage() {
         return message;
+    }
+
+    public static ErrorCode errorCodeByMessage(String message) {
+        return Arrays.stream(ErrorCode.values())
+                .filter(errorCode -> errorCode.getMessage().equals(message))
+                .findFirst()
+                .orElse(null);
     }
 
 }

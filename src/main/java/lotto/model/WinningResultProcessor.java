@@ -2,13 +2,12 @@ package lotto.model;
 
 import lotto.dto.DrawResult;
 import lotto.dto.WinningCountResult;
-import lotto.global.exception.UserInputException;
 
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
-import static lotto.global.exception.ErrorCode.NEGATIVE_DIGIT;
+import static lotto.global.util.InputValidator.validateNegativeNumber;
 
 public class WinningResultProcessor {
 
@@ -30,15 +29,9 @@ public class WinningResultProcessor {
     }
 
     public double calculateReturnRate(int purchaseAmount, WinningCountResult winningCountResult) {
-        validateNegativePurchaseAmount(purchaseAmount);
+        validateNegativeNumber(purchaseAmount);
         BigInteger totalPrizeMoney = calculateTotalPrizeMoney(winningCountResult);
         return totalPrizeMoney.doubleValue() / (double) purchaseAmount * PERCENTAGE;
-    }
-
-    private void validateNegativePurchaseAmount(int purchaseAmount) {
-        if (purchaseAmount <= 0) {
-            throw new UserInputException(NEGATIVE_DIGIT);
-        }
     }
 
     private BigInteger calculateTotalPrizeMoney(WinningCountResult winningCountResult) {

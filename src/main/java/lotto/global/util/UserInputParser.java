@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Set;
 
 import static lotto.global.exception.ErrorCode.*;
+import static lotto.global.util.InputValidator.*;
 import static lotto.model.Lotto.*;
+import static lotto.model.LottoIssuer.DEFAULT_LOTTO_PRICE;
 
 public class UserInputParser {
 
@@ -21,109 +23,80 @@ public class UserInputParser {
             return purchaseAmount;
         } catch (NumberFormatException e) {
             throw new UserInputException(NOT_NUMBER_FORMAT);
+        } catch (IllegalArgumentException e) {
+            throw new UserInputException(errorCodeByMessage(e.getMessage()));
+        } catch (Exception e) {
+            throw new UserInputException(INTERNAL_SERVER_ERROR);
         }
     }
 
     private static void validate(int purchaseAmount) {
         validateNegativeNumber(purchaseAmount);
-        validateNotDividedUp(purchaseAmount);
+        validateNotDividedUp(purchaseAmount, DEFAULT_LOTTO_PRICE);
     }
 
-    private static void validateNegativeNumber(int inputNum) {
-        if (inputNum < 0) {
-            throw new UserInputException(NEGATIVE_DIGIT);
-        }
-    }
-
-    private static void validateNotDividedUp(int purchaseAmount) {
-        if (purchaseAmount % LOTTO_PRICE_UNIT != 0) {
-            throw new UserInputException(PURCHASE_AMOUNT_NOT_DIVIDED_UP);
-        }
-    }
 
     public static Set<Integer> parseWinningNumber(String winningNumberInput) {
         try {
             List<String> winningNumberTokens = getWinningNumberTokens(winningNumberInput);
-            List<Integer> originalWinningNumbers = getNumberFormatNumbersOrThrow(winningNumberTokens);
+            List<Integer> originalWinningNumbers = parseValidNumbers(winningNumberTokens);
             Set<Integer> winningNumbers = new HashSet<>(originalWinningNumbers);
             validateWinningNumbers(winningNumbers, originalWinningNumbers);
             return winningNumbers;
-        } catch (NumberFormatException e) {
-            throw new UserInputException(NOT_NUMBER_FORMAT);
+        } catch (IllegalArgumentException e) {
+            throw new UserInputException(errorCodeByMessage(e.getMessage()));
+        } catch (Exception e) {
+            throw new UserInputException(INTERNAL_SERVER_ERROR);
         }
-    }
-
-    private static void validateWinningNumbers(Set<Integer> winningNumbers, List<Integer> originalWinningNumbers) {
-        validateUniqueWinningNumbers(winningNumbers, originalWinningNumbers);
-        validateNegativeNumber(winningNumbers);
-        validateValidRange(winningNumbers);
     }
 
     private static List<String> getWinningNumberTokens(String winningNumberInput) {
         List<String> winningNumberTokens = Arrays.stream(winningNumberInput.split(DIGIT_DELIMITER))
                 .map(String::trim)
                 .toList();
-        validateNumbersCount(winningNumberTokens);
+        validateNumbersCount(winningNumberTokens, LOTTO_NUMBERS_SIZE);
         return winningNumberTokens;
     }
 
-    private static void validateUniqueWinningNumbers(Set<Integer> winningNumbers, List<Integer> originalWinningNumbers) {
-        if (winningNumbers.size() != originalWinningNumbers.size()) {
-            throw new UserInputException(NOT_UNIQUE_NUMBERS);
-        }
-    }
-
-    private static List<Integer> getNumberFormatNumbersOrThrow(List<String> numberTokens) {
+    private static List<Integer> parseValidNumbers(List<String> numberTokens) {
         try {
             return numberTokens.stream()
                     .map(Integer::parseInt)
                     .toList();
         } catch (NumberFormatException e) {
-            throw new UserInputException(NOT_NUMBER_FORMAT);
+            throw new IllegalArgumentException(NOT_NUMBER_FORMAT.getMessage());
         }
+    }
+
+    private static void validateWinningNumbers(Set<Integer> winningNumbers, List<Integer> originalWinningNumbers) {
+        validateUniqueNumbers(originalWinningNumbers);
+        validateValidRange(winningNumbers);
     }
 
     private static void validateValidRange(Set<Integer> winningNumbers) {
-        boolean isOutOfRange = winningNumbers.stream().anyMatch(number -> number < NUMBER_RANGE_MIN || number > NUMBER_RANGE_MAX);
-        if (isOutOfRange) {
-            throw new UserInputException(INVALID_NUMBER_RANGE);
-        }
-    }
-
-    private static void validateNegativeNumber(Set<Integer> winningNumbers) {
-        boolean hasNegativeNumber = winningNumbers.stream().anyMatch(number -> number < 0);
-        if (hasNegativeNumber) {
-            throw new UserInputException(NEGATIVE_DIGIT);
-        }
-    }
-
-    private static void validateNumbersCount(List<String> winningNumberTokens) {
-        if (winningNumberTokens.size() != NUMBERS_SIZE) {
-            throw new UserInputException(INVALID_NUMBERS_SIZE);
-        }
+        validateSetHasNegativeNumber(winningNumbers);
+        validateNumbersRange(winningNumbers, NUMBER_RANGE_MIN, NUMBER_RANGE_MAX);
     }
 
     public static int parseBonusNumber(String bonusNumberInput, Set<Integer> winningNumbers) {
         try {
             int bonusNumber = Integer.parseInt(bonusNumberInput);
             validateNegativeNumber(bonusNumber);
-            validateNumberRange(bonusNumber);
+            validateNumberRange(bonusNumber, NUMBER_RANGE_MIN, NUMBER_RANGE_MAX);
             validateUniqueBonusNumber(winningNumbers, bonusNumber);
             return bonusNumber;
         } catch (NumberFormatException e) {
             throw new UserInputException(NOT_NUMBER_FORMAT);
+        } catch (IllegalArgumentException e) {
+            throw new UserInputException(errorCodeByMessage(e.getMessage()));
+        } catch (Exception e) {
+            throw new UserInputException(INTERNAL_SERVER_ERROR);
         }
     }
 
     private static void validateUniqueBonusNumber(Set<Integer> winningNumbers, int bonusNumber) {
         if (winningNumbers.contains(bonusNumber)) {
-            throw new UserInputException(NOT_UNIQUE_NUMBERS);
-        }
-    }
-
-    private static void validateNumberRange(int bonusNumber) {
-        if (bonusNumber < NUMBER_RANGE_MIN || bonusNumber > NUMBER_RANGE_MAX) {
-            throw new UserInputException(INVALID_NUMBER_RANGE);
+            throw new IllegalArgumentException(NOT_UNIQUE_NUMBERS.getMessage());
         }
     }
 

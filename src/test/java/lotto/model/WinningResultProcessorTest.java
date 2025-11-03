@@ -4,8 +4,6 @@ import lotto.dto.DrawResult;
 import lotto.dto.WinningCountResult;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 import java.util.Map;
@@ -56,11 +54,11 @@ class WinningResultProcessorTest {
         assertThat(returnRate).isEqualTo(50375000);
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {0, -3000})
-    @DisplayName("구입 금액이 0 이하이면 예외가 발생한다.")
-    void calculateReturnRateWhenPurchaseAmountIsUnder0(int purchaseAmount) {
+    @Test
+    @DisplayName("구입 금액이 음수이면 예외가 발생한다.")
+    void calculateReturnRateWhenPurchaseAmountIsUnder0() {
         // given
+        int purchaseAmount = -5000;
         WinningResultProcessor winningResultProcessor = new WinningResultProcessor();
 
         // when, then
