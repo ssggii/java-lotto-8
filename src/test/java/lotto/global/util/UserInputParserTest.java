@@ -95,6 +95,18 @@ class UserInputParserTest {
     }
 
     @Test
+    @DisplayName("당첨 번호 중에 중복된 숫자가 있으면 예외가 발생한다.")
+    void uniqueWinningNumbersTest() {
+        // given
+        String winningNumberInput = "1, 2, 3, 4, 5, 5";
+
+        // when, then
+        assertThatThrownBy(() -> UserInputParser.parseWinningNumber(winningNumberInput))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining(NOT_UNIQUE_NUMBERS.getMessage());
+    }
+
+    @Test
     @DisplayName("보너스 번호가 음수이면 예외가 발생한다.")
     void negativeBonusNumberTest() {
         // given
