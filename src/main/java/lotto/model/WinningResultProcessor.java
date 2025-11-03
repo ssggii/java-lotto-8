@@ -18,11 +18,13 @@ public class WinningResultProcessor {
         WinningCountResult winningCountResult = WinningCountResult.create();
         Map<Ranking, Integer> winningCounts = winningCountResult.winningCountMap();
 
-        for (DrawResult drawResult : drawResults) {
-            Ranking ranking = drawResult.ranking();
-            int currentCount = winningCounts.getOrDefault(ranking, 0);
-            winningCounts.put(ranking, currentCount + 1);
-        }
+        drawResults.stream()
+                .filter(drawResult -> drawResult.ranking() != null)
+                .forEach(drawResult -> {
+                    Ranking ranking = drawResult.ranking();
+                    int currentCount = winningCounts.getOrDefault(ranking, 0);
+                    winningCounts.put(ranking, currentCount + 1);
+                });
 
         return winningCountResult;
     }

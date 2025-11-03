@@ -17,7 +17,9 @@ public class LottoDrawer {
             int hittingCount = lotto.findHittingNumberCount(winningNumbers); // 당첨 번호와 일치하는 숫자 개수
             boolean hitBonus = decideBonusHit(winningCondition, lotto, hittingCount);
             Ranking.findRanking(hittingCount, hitBonus)
-                    .ifPresent(ranking -> drawResults.add(DrawResult.of(lotto, ranking)));
+                    .ifPresentOrElse(
+                            ranking -> drawResults.add(DrawResult.of(lotto, ranking)), // 순위 있음
+                            () -> drawResults.add(DrawResult.of(lotto, null))); // 순위 없음 (꽝)
         });
 
         return drawResults;

@@ -7,6 +7,7 @@ import lotto.model.Ranking;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static lotto.global.ViewMessage.DRAW_RESULT_INFO;
 import static lotto.global.ViewMessage.LOTTO_COUNT_INFO;
@@ -33,15 +34,16 @@ public class OutputView {
 
         Map<Ranking, Integer> winningCounts = result.winningCountMap();
         winningCounts.keySet().stream()
+                .filter(Objects::nonNull)
                 .sorted(Comparator.comparingInt(Ranking::ordinal).reversed())
                 .forEach(ranking -> {
                     int winningCount = winningCounts.getOrDefault(ranking, 0);
                     int hittingCount = ranking.getHittingCount();
                     int prize = ranking.getPrize();
-                    boolean isHitBonus = ranking.isHitBonus();
+                    Boolean isHitBonus = ranking.isHitBonus();
 
                     StringBuilder builder = new StringBuilder("%,d개 일치 (%,d원) - %,d개\n");
-                    if (isHitBonus) {
+                    if (isHitBonus != null && isHitBonus) {
                         builder.insert(7, ", 보너스 볼 일치");
                     }
                     System.out.printf(builder.toString(), hittingCount, prize, winningCount);

@@ -34,12 +34,13 @@ class LottoDrawerTest {
         List<DrawResult> drawResults = lottoDrawer.decideRankings(lottos, winningCondition);
 
         // then
-        assertThat(drawResults.size()).isEqualTo(5);
+        assertThat(drawResults.size()).isEqualTo(6);
         assertThat(drawResults.get(0).ranking()).isEqualTo(Ranking.FIRST);
         assertThat(drawResults.get(1).ranking()).isEqualTo(Ranking.SECOND);
         assertThat(drawResults.get(2).ranking()).isEqualTo(Ranking.THIRD);
         assertThat(drawResults.get(3).ranking()).isEqualTo(Ranking.FOURTH);
         assertThat(drawResults.get(4).ranking()).isEqualTo(Ranking.FIFTH);
+        assertThat(drawResults.get(5).ranking()).isNull();
     }
 
 }
