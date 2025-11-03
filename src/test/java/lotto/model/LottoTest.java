@@ -1,5 +1,6 @@
 package lotto.model;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -88,5 +89,17 @@ class LottoTest {
                 Arguments.of(Set.of(1, 2, 10, 9, 8, 7), 2),
                 Arguments.of(Set.of(1, 11, 10, 9, 8, 7), 1)
         );
+    }
+
+    @Test
+    @DisplayName("로또 번호는 오름차순으로 정렬하여 저장한다.")
+    void lottoNumberSortingTest() {
+        // when
+        List<Integer> numbers = List.of(6, 17, 11, 15, 34, 21);
+        Lotto lotto = Lotto.from(numbers);
+
+        // then
+        List<Integer> sortedNumbers = numbers.stream().sorted().toList();
+        Assertions.assertThat(lotto.getNumbers()).isEqualTo(sortedNumbers);
     }
 }

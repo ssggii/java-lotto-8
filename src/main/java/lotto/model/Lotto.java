@@ -51,7 +51,8 @@ public class Lotto {
     }
 
     public static Lotto from(List<Integer> numbers) {
-        return new Lotto(numbers);
+        List<Integer> sortedNumbers = numbers.stream().sorted().toList();
+        return new Lotto(sortedNumbers);
     }
 
     public Integer findHittingNumberCount(Set<Integer> targetNumbers) {
