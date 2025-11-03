@@ -3,9 +3,9 @@ package lotto.global.util;
 import lotto.global.exception.UserInputException;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static lotto.global.exception.ErrorCode.*;
 import static lotto.model.Lotto.*;
@@ -43,19 +43,48 @@ public class UserInputParser {
 
     public static Set<Integer> parseWinningNumber(String winningNumberInput) {
         try {
-            List<String> winningNumberTokens = Arrays.stream(winningNumberInput.split(DIGIT_DELIMITER)).map(String::trim).toList();
-            Set<Integer> winningNumbers = winningNumberTokens.stream().map(Integer::parseInt).collect(Collectors.toSet());
-            validate(winningNumbers);
+            List<String> winningNumberTokens = getWinningNumberTokens(winningNumberInput);
+            List<Integer> originalWinningNumbers = getNumberFormatNumbersOrThrow(winningNumberTokens);
+            Set<Integer> winningNumbers = new HashSet<>(originalWinningNumbers);
+            validateWinningNumbers(winningNumbers, originalWinningNumbers);
             return winningNumbers;
         } catch (NumberFormatException e) {
             throw new UserInputException(NOT_NUMBER_FORMAT);
         }
     }
 
-    private static void validate(Set<Integer> winningNumbers) {
-        validateNumbersCount(winningNumbers);
+    private static void validateWinningNumbers(Set<Integer> winningNumbers, List<Integer> originalWinningNumbers) {
+        validateUniqueWinningNumbers(winningNumbers, originalWinningNumbers);
         validateNegativeNumber(winningNumbers);
         validateAllNumberRange(winningNumbers);
+    }
+
+    private static List<String> getWinningNumberTokens(String winningNumberInput) {
+        List<String> winningNumberTokens = Arrays.stream(winningNumberInput.split(DIGIT_DELIMITER))
+                .map(String::trim)
+                .toList();
+        validateNumbersCount(winningNumberTokens); // 개수 검증
+        return winningNumberTokens;
+    }
+
+    private static void validateUniqueWinningNumbers(Set<Integer> winningNumbers, List<Integer> originalWinningNumbers) {
+        if (winningNumbers.size() != originalWinningNumbers.size()) {
+            throw new UserInputException(NOT_UNIQUE_NUMBERS);
+        }
+    }
+
+    private static List<Integer> getNumberFormatNumbersOrThrow(List<String> numberTokens) {
+        try {
+            return numberTokens.stream()
+                    .map(Integer::parseInt)
+                    .toList();
+        } catch (NumberFormatException e) {
+            throw new UserInputException(NOT_NUMBER_FORMAT);
+        }
+    }
+
+    private static void validate(Set<Integer> winningNumbers) {
+
     }
 
     private static void validateAllNumberRange(Set<Integer> winningNumbers) {
@@ -72,8 +101,8 @@ public class UserInputParser {
         }
     }
 
-    private static void validateNumbersCount(Set<Integer> winningNumbers) {
-        if (winningNumbers.size() != NUMBERS_SIZE) {
+    private static void validateNumbersCount(List<String> winningNumberTokens) {
+        if (winningNumberTokens.size() != NUMBERS_SIZE) {
             throw new UserInputException(INVALID_NUMBERS_SIZE);
         }
     }
@@ -82,11 +111,11 @@ public class UserInputParser {
         int bonusNumber = Integer.parseInt(bonusNumberInput);
         validateNegativeNumber(bonusNumber);
         validateNumberRange(bonusNumber);
-        validateUnique(winningNumbers, bonusNumber);
+        validateUniqueBonusNumber(winningNumbers, bonusNumber);
         return bonusNumber;
     }
 
-    private static void validateUnique(Set<Integer> winningNumbers, int bonusNumber) {
+    private static void validateUniqueBonusNumber(Set<Integer> winningNumbers, int bonusNumber) {
         if (winningNumbers.contains(bonusNumber)) {
             throw new UserInputException(NOT_UNIQUE_NUMBERS);
         }
